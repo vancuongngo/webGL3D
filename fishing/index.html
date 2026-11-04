@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lakeside Fishing</title>
+  <style>
+    :root { --ink: #0d2233; --panel: rgba(255, 255, 255, 0.85); }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #a8d8f0; }
+    body { font-family: system-ui, -apple-system, sans-serif; user-select: none; -webkit-user-select: none; color: var(--ink); }
+    canvas { display: block; touch-action: none; cursor: crosshair; }
+    .hidden { display: none !important; }
+
+    #hud { position: fixed; top: 16px; left: 16px; display: flex; gap: 8px; flex-wrap: wrap; pointer-events: none; }
+    .stat { background: var(--panel); border-radius: 10px; padding: 8px 12px; min-width: 64px; }
+    .stat span, .label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; opacity: .6; }
+    .stat b { font-size: 18px; }
+    #help { position: fixed; top: 16px; right: 16px; background: var(--panel); border-radius: 10px; padding: 8px 12px; font-size: 12px; line-height: 1.5; pointer-events: none; }
+
+    #sound { position: fixed; top: 92px; right: 16px; background: var(--panel); border: 0; border-radius: 10px;
+      padding: 8px 12px; font: 13px system-ui, sans-serif; color: var(--ink); cursor: pointer; }
+    #sound:hover { background: #fff; }
+    #status { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); max-width: calc(100vw - 32px);
+      background: var(--panel); padding: 10px 18px; border-radius: 999px; font-size: 15px; text-align: center; pointer-events: none; }
+    #status:empty { display: none; }
+    #status.alert { background: #e53b2f; color: #fff; font-weight: 700; font-size: 20px; animation: pulse .22s infinite alternate; }
+    #status.good { background: #2f9e5b; color: #fff; }
+    #status.bad { background: #8a3434; color: #fff; }
+    @keyframes pulse { to { transform: translateX(-50%) scale(1.08); } }
+
+    #power { position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%); width: min(280px, calc(100vw - 32px));
+      height: 14px; background: rgba(0, 0, 0, .35); border-radius: 7px; overflow: hidden; pointer-events: none; }
+    #powerFill { height: 100%; width: 0; background: linear-gradient(90deg, #ffd23f, #ff6b4a); }
+
+    #reel { position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%); width: min(320px, calc(100vw - 32px));
+      box-sizing: border-box; background: var(--panel); border-radius: 12px; padding: 10px 14px; pointer-events: none; }
+    #tension, #progress { position: relative; height: 16px; border-radius: 8px; overflow: hidden; margin: 4px 0 8px; }
+    #tension { background: #e9b3ae; }
+    #tension.danger { background: #e5594f; }
+    #zone { position: absolute; top: 0; bottom: 0; left: 30%; width: 45%; background: #7cc68d; }
+    #needle { position: absolute; top: -2px; bottom: -2px; width: 4px; margin-left: -2px; background: var(--ink); left: 45%; }
+    #progress { background: rgba(0, 0, 0, .12); margin-bottom: 2px; }
+    #progressFill { height: 100%; width: 0; background: #2b7bbd; }
+
+    #card { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #fff; border-radius: 14px;
+      padding: 14px 22px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, .2); pointer-events: none; }
+    #cardRarity { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
+    #cardName { font-size: 26px; font-weight: 800; margin: 2px 0; }
+    #cardStats { font-size: 14px; opacity: .75; }
+  </style>
+  <script type="importmap">
+  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+  </script>
+</head>
+<body>
+  <div id="hud">
+    <div class="stat"><span>Catches</span><b id="catches">0</b></div>
+    <div class="stat"><span>Score</span><b id="score">0</b></div>
+    <div class="stat"><span>Biggest fish</span><b id="best">—</b></div>
+  </div>
+  <div id="help">Aim: move the mouse<br>Cast: hold, then release<br>Space bar works too</div>
+  <button id="sound"></button>
+  <div id="power" class="hidden"><div id="powerFill"></div></div>
+  <div id="reel" class="hidden">
+    <span class="label">Line tension</span>
+    <div id="tension"><div id="zone"></div><div id="needle"></div></div>
+    <span class="label">Reeling in</span>
+    <div id="progress"><div id="progressFill"></div></div>
+  </div>
+  <div id="card" class="hidden"><div id="cardRarity"></div><div id="cardName"></div><div id="cardStats"></div></div>
+  <div id="status"></div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
